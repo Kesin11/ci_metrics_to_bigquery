@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="15" failures="0" time="5.257">
+  <testsuite name="restaurant" errors="0" failures="0" skipped="0" timestamp="2019-12-05T15:22:11" time="3.88" tests="5">
+    <testcase classname="restaurant 未認証ユーザー readできない" name="restaurant 未認証ユーザー readできない" time="1.318">
+    </testcase>
+    <testcase classname="restaurant CRUD 取得できる" name="restaurant CRUD 取得できる" time="0.113">
+    </testcase>
+    <testcase classname="restaurant CRUD 作成できない" name="restaurant CRUD 作成できない" time="0.125">
+    </testcase>
+    <testcase classname="restaurant CRUD 編集できない" name="restaurant CRUD 編集できない" time="0.146">
+    </testcase>
+    <testcase classname="restaurant CRUD 削除できない" name="restaurant CRUD 削除できない" time="0.201">
+    </testcase>
+  </testsuite>
+  <testsuite name="reviews" errors="0" failures="0" skipped="0" timestamp="2019-12-05T15:22:11" time="4.775" tests="10">
+    <testcase classname="reviews 未認証ユーザー readできない" name="reviews 未認証ユーザー readできない" time="1.222">
+    </testcase>
+    <testcase classname="reviews CRUD createできる" name="reviews CRUD createできる" time="0.252">
+    </testcase>
+    <testcase classname="reviews CRUD updateできない" name="reviews CRUD updateできない" time="0.2">
+    </testcase>
+    <testcase classname="reviews CRUD deleteできない" name="reviews CRUD deleteできない" time="0.17">
+    </testcase>
+    <testcase classname="reviews バリデーション 自分以外のuser_idでは作成できない" name="reviews バリデーション 自分以外のuser_idでは作成できない" time="0.117">
+    </testcase>
+    <testcase classname="reviews バリデーション rateが 負 NG" name="reviews バリデーション rateが 負 NG" time="0.123">
+    </testcase>
+    <testcase classname="reviews バリデーション rateが 0 NG" name="reviews バリデーション rateが 0 NG" time="0.133">
+    </testcase>
+    <testcase classname="reviews バリデーション rateが 1 OK" name="reviews バリデーション rateが 1 OK" time="0.172">
+    </testcase>
+    <testcase classname="reviews バリデーション rateが 5 OK" name="reviews バリデーション rateが 5 OK" time="0.138">
+    </testcase>
+    <testcase classname="reviews バリデーション rateが 5より大きい NG" name="reviews バリデーション rateが 5より大きい NG" time="0.172">
+    </testcase>
+  </testsuite>
+</testsuites>
