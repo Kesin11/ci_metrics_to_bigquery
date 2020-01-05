@@ -40,6 +40,13 @@ const main = async () => {
   }
   output['testsuite'] = testsuiteList
 
-  console.log(JSON.stringify(output, null, 4))
+  // testsuitesへの独自拡張フィールド
+  output['isFailure'] = output['failures'] > 0 ? true : false
+  // もしtestsuite.0.timestampから取得できなければ、GCSのメタデータでもいい
+  output['timestamp'] = output['testsuite'][0]['timestamp'] // dummy
+  output['buildId'] = Math.ceil(Math.random() * 100) // dummy
+
+  // console.log(JSON.stringify(output, null, 4))
+  console.log(JSON.stringify(output))
 }
 main()
