@@ -7,7 +7,7 @@
     "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,18 @@
   "private": true,
   "dependencies": {
     "xml2js": "0.4.23"
+  },
+  "devDependencies": {
+    "jest": "24.9.0",
+    "jest-junit": "10.0.0"
+  },
+  "jest-junit": {
+    "suiteName": "gcf_junit_xml_to_bq_dummy",
+    "outputDirectory": "junit",
+    "uniqueOutputName": "true",
+    "includeConsoleOutput": "true",
+    "usePathForSuiteName": "true"
   }
+
+
 }
