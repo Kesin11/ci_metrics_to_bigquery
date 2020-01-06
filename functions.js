@@ -29,7 +29,7 @@ exports.helloGCSGeneric = async (data, context) => {
 
   // BigQuery loadのためにjsonを書き出す
   const tempJsonPath = path.join(os.tmpdir(), file.name)
-  fs.writeFileSync(tempJsonPath, convertedJson)
+  fs.writeFileSync(tempJsonPath, JSON.stringify(convertedJson))
 
   const bigquery = new BigQuery()
   // BigQueryはGCSから直接アップできる
@@ -37,8 +37,11 @@ exports.helloGCSGeneric = async (data, context) => {
     .dataset('junit')
     .table('raw')
     .load(tempJsonPath, {
+      // schema: schema,
+      autodetect: true,
+      schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'],
       sourceFormat: 'NEWLINE_DELIMITED_JSON',
-      autodetect: true
+      writeDisposition: 'WRITE_APPEND',
     })
 
   const job = results[0]
