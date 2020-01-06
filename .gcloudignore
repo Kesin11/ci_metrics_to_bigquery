@@ -14,3 +14,8 @@
 .gitignore
 
 node_modules
+__tests__
+example
+junit
+out
+jest.config.js

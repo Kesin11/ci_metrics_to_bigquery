@@ -2,12 +2,13 @@
   "name": "gcf_junit_xml_to_bq",
   "version": "1.0.0",
   "description": "Upload JUnit test report to BigQuery with GCF + GCS",
-  "main": "index.js",
+  "main": "functions.js",
   "directories": {
     "example": "example"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "deploy": "gcloud functions deploy helloGCSGeneric --runtime nodejs8 --trigger-resource kesin11-junit-bigquery --trigger-event google.storage.object.finalize"
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,8 @@
   "homepage": "https://github.com/Kesin11/gcf_junit_xml_to_bq#readme",
   "private": true,
   "dependencies": {
+    "@google-cloud/bigquery": "4.5.0",
+    "@google-cloud/storage": "4.2.0",
     "xml2js": "0.4.23"
   },
   "devDependencies": {
@@ -34,6 +37,4 @@
     "includeConsoleOutput": "true",
     "usePathForSuiteName": "true"
   }
-
-
 }
