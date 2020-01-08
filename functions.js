@@ -17,7 +17,8 @@ exports.helloGCSGeneric = async (data, context) => {
   // x-goog-metaのprefixを除いたキーがリストアップされる
   console.log(`  metadata: ${JSON.stringify(file.metadata)}`);
   // このようにアップする
-  // gsutil -h x-goog-meta-build-id:11 cp example/functions.xml gs://kesin11-junit-bigquery/
+  // metadataはx-goog-meta-以降の文字列がそのまま使われる。ただし、自動で小文字に変換されるので注意
+  // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-junit-bigquery/
 
   const storage = new Storage()
   const bucket = storage.bucket('kesin11-junit-bigquery')
@@ -25,11 +26,13 @@ exports.helloGCSGeneric = async (data, context) => {
 
   // download()の結果の型はBufferなので、toStringでstringに変換
   const convertedJson = await junit2json.parse(uploadedXML.toString())
-  console.log(`  convertedJson: ${JSON.stringify(convertedJson)}`)
+  convertedJson['metadata'] = file.metadata
+  const convertedJsonString = JSON.stringify(convertedJson)
+  console.log(`  convertedJson: ${convertedJsonString}`)
 
   // BigQuery loadのためにjsonを書き出す
   const tempJsonPath = path.join(os.tmpdir(), file.name)
-  fs.writeFileSync(tempJsonPath, JSON.stringify(convertedJson))
+  fs.writeFileSync(tempJsonPath, convertedJsonString)
 
   const bigquery = new BigQuery()
   // BigQueryはGCSから直接アップできる
