@@ -27,12 +27,11 @@ exports.helloGCSGeneric = async (data, context) => {
   // download()の結果の型はBufferなので、toStringでstringに変換
   const convertedJson = await junit2json.parse(uploadedXML.toString())
   convertedJson['metadata'] = file.metadata
-  const convertedJsonString = JSON.stringify(convertedJson)
-  console.log(`  convertedJson: ${convertedJsonString}`)
+  console.log(`  convertedJson: ${JSON.stringify(convertedJson, null, 2)}`)
 
   // BigQuery loadのためにjsonを書き出す
   const tempJsonPath = path.join(os.tmpdir(), file.name)
-  fs.writeFileSync(tempJsonPath, convertedJsonString)
+  fs.writeFileSync(tempJsonPath, JSON.stringify(convertedJson))
 
   const bigquery = new BigQuery()
   // BigQueryはGCSから直接アップできる
