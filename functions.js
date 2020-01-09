@@ -5,12 +5,18 @@ const { Storage } = require('@google-cloud/storage');
 const { BigQuery } = require('@google-cloud/bigquery')
 const junit2json = require('./lib/junit2json')
 
+// 同名のファイルをアップロードした場合でもgoogle.storage.object.finalizeはトリガーされる
+// 新規作成と上書きを区別する方法が無いため、新規作成のときだけにフィルタリングは不可能
+// ref: https://cloud.google.com/storage/docs/object-versioning
+
 exports.helloGCSGeneric = async (data, context) => {
   const file = data;
   console.log(`  Event ${context.eventId}`);
   console.log(`  Event Type: ${context.eventType}`);
   console.log(`  Bucket: ${file.bucket}`);
   console.log(`  File: ${file.name}`);
+  console.log(`  ContentType: ${file.contentType}`);
+  console.log(`  Generation: ${file.generation}`);
   console.log(`  Metageneration: ${file.metageneration}`);
   console.log(`  Created: ${file.timeCreated}`);
   console.log(`  Updated: ${file.updated}`);
@@ -19,6 +25,9 @@ exports.helloGCSGeneric = async (data, context) => {
   // このようにアップする
   // metadataはx-goog-meta-以降の文字列がそのまま使われる。ただし、自動で小文字に変換されるので注意
   // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-junit-bigquery/
+
+  // XML以外のファイル、ディレクトリ作成の場合は何もしないで終了
+  if (file.contentType !== 'application/xml') return
 
   const storage = new Storage()
   const bucket = storage.bucket('kesin11-junit-bigquery')
