@@ -9,6 +9,18 @@ const junit2json = require('./lib/junit2json')
 // 新規作成と上書きを区別する方法が無いため、新規作成のときだけにフィルタリングは不可能
 // ref: https://cloud.google.com/storage/docs/object-versioning
 
+// ディレクトリ名をtable名として返す
+// ネストした場合は'_'で連結
+// 直下（./)の場合は'default'を返す
+const filePathToTable = (filePath) => {
+  const defaultTable = 'default'
+
+  const dirname = path.dirname(filePath)
+  if (dirname === '.') return defaultTable
+
+  return dirname.replace('/', '_')
+}
+
 exports.helloGCSGeneric = async (data, context) => {
   const file = data;
   console.log(`  Event ${context.eventId}`);
@@ -39,14 +51,15 @@ exports.helloGCSGeneric = async (data, context) => {
   console.log(`  convertedJson: ${JSON.stringify(convertedJson, null, 2)}`)
 
   // BigQuery loadのためにjsonを書き出す
-  const tempJsonPath = path.join(os.tmpdir(), file.name)
+  const tempJsonPath = path.join(os.tmpdir(), path.basename(file.name))
   fs.writeFileSync(tempJsonPath, JSON.stringify(convertedJson))
 
   const bigquery = new BigQuery()
   // BigQueryはGCSから直接アップできる
   const results = await bigquery
     .dataset('junit')
-    .table('raw')
+    // GCS上のパスからload先のtableを選択
+    .table(filePathToTable(file.name))
     .load(tempJsonPath, {
       // schema: schema,
       autodetect: true,
