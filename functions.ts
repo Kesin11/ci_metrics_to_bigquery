@@ -1,9 +1,9 @@
-const path = require('path')
-const os = require('os')
-const fs = require('fs')
-const { Storage } = require('@google-cloud/storage');
-const { BigQuery } = require('@google-cloud/bigquery')
-const junit2json = require('./lib/junit2json')
+import path from 'path'
+import os from 'os'
+import fs from 'fs'
+import { Storage } from '@google-cloud/storage'
+import { BigQuery } from '@google-cloud/bigquery'
+import * as junit2json from './lib/junit2json'
 
 // 同名のファイルをアップロードした場合でもgoogle.storage.object.finalizeはトリガーされる
 // 新規作成と上書きを区別する方法が無いため、新規作成のときだけにフィルタリングは不可能
@@ -12,7 +12,7 @@ const junit2json = require('./lib/junit2json')
 // ディレクトリ名をtable名として返す
 // ネストした場合は'_'で連結
 // 直下（./)の場合は'default'を返す
-const filePathToTable = (filePath) => {
+const filePathToTable = (filePath: string): string => {
   const defaultTable = 'default'
 
   const dirname = path.dirname(filePath)
@@ -21,7 +21,7 @@ const filePathToTable = (filePath) => {
   return dirname.replace('/', '_')
 }
 
-exports.helloGCSGeneric = async (data, context) => {
+exports.helloGCSGeneric = async (data: any, context: any) => {
   const file = data;
   console.log(`  Event ${context.eventId}`);
   console.log(`  Event Type: ${context.eventType}`);
@@ -74,7 +74,7 @@ exports.helloGCSGeneric = async (data, context) => {
   fs.unlinkSync(tempJsonPath)
 
   // Check job status for handle errors
-  const errors = job.status.errors
+  const errors = job.status?.errors
   if (errors && errors.length > 0) {
     throw errors
   }
