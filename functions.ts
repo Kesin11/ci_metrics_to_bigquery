@@ -26,7 +26,7 @@ const nowISOString = () => {
   return date.toISOString()
 }
 
-exports.helloGCSGeneric = async (data: any, context: any) => {
+exports.loadJunitToBq = async (data: any, context: any) => {
   const file = data;
   console.log(`  Event ${context.eventId}`);
   console.log(`  Event Type: ${context.eventType}`);
