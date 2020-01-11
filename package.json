@@ -7,6 +7,7 @@
     "example": "example"
   },
   "scripts": {
+    "build": "tsc",
     "test": "jest",
     "deploy": "gcloud functions deploy helloGCSGeneric --runtime nodejs8 --trigger-resource kesin11-junit-bigquery --trigger-event google.storage.object.finalize"
   },

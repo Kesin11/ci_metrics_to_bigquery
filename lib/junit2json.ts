@@ -1,6 +1,6 @@
-const xml2js = require('xml2js')
+import xml2js from 'xml2js'
 
-const parse = async (xmlString) => {
+export const parse = async (xmlString: xml2js.convertableToString) => {
   const result = await xml2js.parseStringPromise(xmlString, {
     attrValueProcessors: [xml2js.processors.parseNumbers]
   })
@@ -48,8 +48,4 @@ const parse = async (xmlString) => {
   output['created'] = output['testsuite'][0]['timestamp'] // dummy
 
   return output
-}
-
-module.exports = {
-  parse
 }
