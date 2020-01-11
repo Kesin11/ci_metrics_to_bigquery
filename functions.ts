@@ -21,6 +21,11 @@ const filePathToTable = (filePath: string): string => {
   return dirname.replace('/', '_')
 }
 
+const nowISOString = () => {
+  const date = new Date()
+  return date.toISOString()
+}
+
 exports.helloGCSGeneric = async (data: any, context: any) => {
   const file = data;
   console.log(`  Event ${context.eventId}`);
@@ -47,8 +52,12 @@ exports.helloGCSGeneric = async (data: any, context: any) => {
 
   // download()の結果の型はBufferなので、toStringでstringに変換
   const convertedJson = await junit2json.parse(uploadedXML.toString())
+  // 独自フィールドの追加
+  convertedJson['allSuccess'] = convertedJson['failures'] === 0 ? true : false
+  // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
+  convertedJson['created'] = convertedJson['testsuite'][0]['timestamp'] || nowISOString()
   convertedJson['metadata'] = file.metadata
-  console.log(`  convertedJson: ${JSON.stringify(convertedJson, null, 2)}`)
+  // console.log(`  convertedJson: ${JSON.stringify(convertedJson, null, 2)}`)
 
   // BigQuery loadのためにjsonを書き出す
   const tempJsonPath = path.join(os.tmpdir(), path.basename(file.name))

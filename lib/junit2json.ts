@@ -42,10 +42,5 @@ export const parse = async (xmlString: xml2js.convertableToString) => {
   }
   output['testsuite'] = testsuiteList
 
-  // testsuitesへの独自拡張フィールド
-  output['isFailure'] = output['failures'] > 0 ? true : false
-  // TODO: もしtestsuite.0.timestampから取得できなければ、GCF上で起動するのでnowをISO変換したものでOK
-  output['created'] = output['testsuite'][0]['timestamp'] // dummy
-
   return output
 }
