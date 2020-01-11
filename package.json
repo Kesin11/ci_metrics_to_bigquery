@@ -2,7 +2,7 @@
   "name": "gcf_junit_xml_to_bq",
   "version": "1.0.0",
   "description": "Upload JUnit test report to BigQuery with GCF + GCS",
-  "main": "functions.js",
+  "main": "dist/functions.js",
   "directories": {
     "example": "example"
   },
@@ -27,8 +27,11 @@
     "xml2js": "0.4.23"
   },
   "devDependencies": {
+    "@types/node": "13.1.6",
+    "@types/xml2js": "0.4.5",
     "jest": "24.9.0",
-    "jest-junit": "10.0.0"
+    "jest-junit": "10.0.0",
+    "typescript": "3.7.4"
   },
   "jest-junit": {
     "suiteName": "gcf_junit_xml_to_bq_dummy",
