@@ -32,7 +32,7 @@ resource "google_bigquery_dataset" "default" {
 # JUnitデータ用
 resource "google_bigquery_table" "raw_junit" {
   dataset_id = google_bigquery_dataset.default.dataset_id
-  table_id   = "raw_junit"
+  table_id   = "junit"
   schema = file("./bq_junit_table_schema.json")
   description = "JUnitの生データ蓄積用のTable。参照は取り回しやすいようにViewの方を使うこと"
 
@@ -44,7 +44,7 @@ resource "google_bigquery_table" "raw_junit" {
 
 resource "google_bigquery_table" "junit" {
   dataset_id = google_bigquery_dataset.default.dataset_id
-  table_id   = "junit"
+  table_id   = "junit_view"
   description = "参照用のView"
   view {
     query = "SELECT * FROM `${var.project_id}.${google_bigquery_dataset.default.dataset_id}.${google_bigquery_table.raw_junit.table_id}`"
@@ -55,7 +55,7 @@ resource "google_bigquery_table" "junit" {
 # Jobデータ用
 resource "google_bigquery_table" "raw_job" {
   dataset_id = google_bigquery_dataset.default.dataset_id
-  table_id   = "raw_job"
+  table_id   = "job"
   schema = file("./common_partition_by_created.json")
   description = "Jobの生データ蓄積用のTable。参照は取り回しやすいようにViewの方を使うこと"
 
@@ -67,7 +67,7 @@ resource "google_bigquery_table" "raw_job" {
 
 resource "google_bigquery_table" "job" {
   dataset_id = google_bigquery_dataset.default.dataset_id
-  table_id   = "job"
+  table_id   = "job_view"
   description = "参照用のView"
   view {
     query = "SELECT * FROM `${var.project_id}.${google_bigquery_dataset.default.dataset_id}.${google_bigquery_table.raw_job.table_id}`"
