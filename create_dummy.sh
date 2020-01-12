@@ -6,9 +6,10 @@
 
 set -u
 
-DUMMY_NUM=2
+DUMMY_NUM=20
 BUILD_ID=1
 JOB_NAME=gcf_junit_xml_to_bq
+BUCKET=${BUCKET_PREFIX}-pipeline-metrics-bq # BUCKET_PREFIX from ENV
 
 rm -f ./junit/*
 for i in `seq 1 ${DUMMY_NUM}`
@@ -24,5 +25,5 @@ do
   gsutil \
     -h x-goog-meta-build_id:${BUILD_ID} \
     -h x-goog-meta-job_name:${JOB_NAME} \
-    cp junit/${name} gs://kesin11-junit-bigquery/
+    cp junit/${name} gs://${BUCKET}/junit_dummy/
 done
