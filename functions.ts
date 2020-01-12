@@ -41,13 +41,18 @@ exports.loadJunitToBq = async (data: any, context: any) => {
   console.log(`  metadata: ${JSON.stringify(file.metadata)}`);
   // このようにアップする
   // metadataはx-goog-meta-以降の文字列がそのまま使われる。ただし、自動で小文字に変換されるので注意
-  // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-junit-bigquery/
+  // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-pipeline-metrics-bq/junit/
 
   // XML以外のファイル、ディレクトリ作成の場合は何もしないで終了
   if (file.contentType !== 'application/xml') return
 
+  console.log(`  ENV[GCS_BUCKET] ${process.env['GCS_BUCKET']}`)
+  if (!process.env['GCS_BUCKET']) {
+    throw 'ENV GCS_BUCKET is empty! Please check your local ENV before deploy'
+  }
+
   const storage = new Storage()
-  const bucket = storage.bucket('kesin11-junit-bigquery')
+  const bucket = storage.bucket(process.env['GCS_BUCKET'])
   const uploadedXML = await bucket.file(file.name).download()
 
   // download()の結果の型はBufferなので、toStringでstringに変換
@@ -66,7 +71,7 @@ exports.loadJunitToBq = async (data: any, context: any) => {
   const bigquery = new BigQuery()
   // BigQueryはGCSから直接アップできる
   const results = await bigquery
-    .dataset('junit')
+    .dataset('pipeline')
     // GCS上のパスからload先のtableを選択
     .table(filePathToTable(file.name))
     .load(tempJsonPath, {

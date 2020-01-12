@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "deploy": "npm run build && gcloud functions deploy loadJunitToBq --runtime nodejs10 --trigger-resource kesin11-junit-bigquery --trigger-event google.storage.object.finalize"
+    "deploy": "npm run build && gcloud functions deploy loadJunitToBq --runtime nodejs10 --trigger-resource ${GCS_BUCKET} --set-env-vars GCS_BUCKET=${GCS_BUCKET} --trigger-event google.storage.object.finalize"
   },
   "repository": {
     "type": "git",
