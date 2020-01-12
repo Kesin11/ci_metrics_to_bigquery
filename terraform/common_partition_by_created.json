@@ -1,7 +1,7 @@
 [
   {
     "description": "bq-datetime for table partition", 
-    "mode": "REQUIRED", 
+    "mode": "NULLABLE", 
     "name": "created", 
     "type": "TIMESTAMP"
   }
