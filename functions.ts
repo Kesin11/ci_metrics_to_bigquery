@@ -26,33 +26,22 @@ const nowISOString = () => {
   return date.toISOString()
 }
 
+// このようにアップロードする
+// gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-pipeline-metrics-bq/junit/
+// metadataはx-goog-meta-以降の文字列がそのまま使われる。ただし、自動で小文字に変換されるので注意
 exports.loadJunitToBq = async (data: any, context: any) => {
   const file = data;
-  console.log(`  Event ${context.eventId}`);
-  console.log(`  Event Type: ${context.eventType}`);
   console.log(`  Bucket: ${file.bucket}`);
   console.log(`  File: ${file.name}`);
   console.log(`  ContentType: ${file.contentType}`);
-  console.log(`  Generation: ${file.generation}`);
-  console.log(`  Metageneration: ${file.metageneration}`);
-  console.log(`  Created: ${file.timeCreated}`);
-  console.log(`  Updated: ${file.updated}`);
   // x-goog-metaのprefixを除いたキーがリストアップされる
   console.log(`  metadata: ${JSON.stringify(file.metadata)}`);
-  // このようにアップする
-  // metadataはx-goog-meta-以降の文字列がそのまま使われる。ただし、自動で小文字に変換されるので注意
-  // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-pipeline-metrics-bq/junit/
 
   // XML以外のファイル、ディレクトリ作成の場合は何もしないで終了
   if (file.contentType !== 'application/xml') return
 
-  console.log(`  ENV[GCS_BUCKET] ${process.env['GCS_BUCKET']}`)
-  if (!process.env['GCS_BUCKET']) {
-    throw 'ENV GCS_BUCKET is empty! Please check your local ENV before deploy'
-  }
-
   const storage = new Storage()
-  const bucket = storage.bucket(process.env['GCS_BUCKET'])
+  const bucket = storage.bucket(file.bucket)
   const uploadedXML = await bucket.file(file.name).download()
 
   // download()の結果の型はBufferなので、toStringでstringに変換
