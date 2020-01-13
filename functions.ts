@@ -26,6 +26,54 @@ const nowISOString = () => {
   return date.toISOString()
 }
 
+// XMLをJSON(+独自フィールド追加）に変換
+const createJunitJson = async (file: any): Promise<object> => {
+  const storage = new Storage()
+  const bucket = storage.bucket(file.bucket)
+  const uploadedXML = await bucket.file(file.name).download()
+
+  // download()の結果の型はBufferなので、toStringでstringに変換
+  const convertedJson = await junit2json.parse(uploadedXML.toString())
+  // 独自フィールドの追加
+  convertedJson['allSuccess'] = convertedJson['failures'] === 0 ? true : false
+  // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
+  convertedJson['created'] = convertedJson['testsuite'][0]['timestamp'] || nowISOString()
+  convertedJson['metadata'] = file.metadata
+
+  // console.log(`  convertedJson: ${JSON.stringify(convertedJson, null, 2)}`)
+  return convertedJson
+}
+
+// BigQueryにload
+const loadJunitJson = async (file: any, convertedJson: object) => {
+  // BigQuery loadのためにjsonを書き出す
+  const tempJsonPath = path.join(os.tmpdir(), path.basename(file.name))
+  fs.writeFileSync(tempJsonPath, JSON.stringify(convertedJson))
+
+  const bigquery = new BigQuery()
+  const results = await bigquery
+    .dataset('pipeline')
+    // GCS上のパスからload先のtableを選択
+    .table(filePathToTable(file.name))
+    .load(tempJsonPath, {
+      autodetect: true,
+      schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'],
+      sourceFormat: 'NEWLINE_DELIMITED_JSON',
+      writeDisposition: 'WRITE_APPEND',
+    })
+
+  const job = results[0]
+  console.log(`Job ${job.id} completed.`)
+
+  fs.unlinkSync(tempJsonPath)
+
+  // jobのエラーチェックとエラーハンドリング
+  const errors = job.status?.errors
+  if (errors && errors.length > 0) {
+    throw errors
+  }
+}
+
 // このようにアップロードする
 // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-pipeline-metrics-bq/junit/
 // metadataはx-goog-meta-以降の文字列がそのまま使われる。ただし、自動で小文字に変換されるので注意
@@ -40,45 +88,6 @@ exports.loadJunitToBq = async (data: any, context: any) => {
   // XML以外のファイル、ディレクトリ作成の場合は何もしないで終了
   if (file.contentType !== 'application/xml') return
 
-  const storage = new Storage()
-  const bucket = storage.bucket(file.bucket)
-  const uploadedXML = await bucket.file(file.name).download()
-
-  // download()の結果の型はBufferなので、toStringでstringに変換
-  const convertedJson = await junit2json.parse(uploadedXML.toString())
-  // 独自フィールドの追加
-  convertedJson['allSuccess'] = convertedJson['failures'] === 0 ? true : false
-  // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
-  convertedJson['created'] = convertedJson['testsuite'][0]['timestamp'] || nowISOString()
-  convertedJson['metadata'] = file.metadata
-  // console.log(`  convertedJson: ${JSON.stringify(convertedJson, null, 2)}`)
-
-  // BigQuery loadのためにjsonを書き出す
-  const tempJsonPath = path.join(os.tmpdir(), path.basename(file.name))
-  fs.writeFileSync(tempJsonPath, JSON.stringify(convertedJson))
-
-  const bigquery = new BigQuery()
-  // BigQueryはGCSから直接アップできる
-  const results = await bigquery
-    .dataset('pipeline')
-    // GCS上のパスからload先のtableを選択
-    .table(filePathToTable(file.name))
-    .load(tempJsonPath, {
-      // schema: schema,
-      autodetect: true,
-      schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'],
-      sourceFormat: 'NEWLINE_DELIMITED_JSON',
-      writeDisposition: 'WRITE_APPEND',
-    })
-
-  const job = results[0]
-  console.log(`Job ${job.id} completed.`)
-
-  fs.unlinkSync(tempJsonPath)
-
-  // Check job status for handle errors
-  const errors = job.status?.errors
-  if (errors && errors.length > 0) {
-    throw errors
-  }
-};
+  const convertedJson = await createJunitJson(file)
+  await loadJunitJson(file, convertedJson)
+}
