@@ -1,14 +1,25 @@
 [
   {
-    "description": "bq-datetime for table partition", 
     "mode": "NULLABLE", 
-    "name": "created", 
-    "type": "TIMESTAMP"
+    "name": "allSuccess", 
+    "type": "BOOLEAN"
   }, 
   {
     "fields": [
       {
         "fields": [
+          {
+            "fields": [
+              {
+                "mode": "NULLABLE", 
+                "name": "body", 
+                "type": "STRING"
+              }
+            ], 
+            "mode": "REPEATED", 
+            "name": "failure", 
+            "type": "RECORD"
+          }, 
           {
             "mode": "NULLABLE", 
             "name": "time", 
@@ -23,18 +34,6 @@
             "mode": "NULLABLE", 
             "name": "classname", 
             "type": "STRING"
-          }, 
-          {
-            "fields": [
-              {
-                "mode": "NULLABLE", 
-                "name": "body", 
-                "type": "STRING"
-              }
-            ], 
-            "mode": "REPEATED", 
-            "name": "failure", 
-            "type": "RECORD"
           }
         ], 
         "mode": "REPEATED", 
@@ -83,6 +82,12 @@
     "type": "RECORD"
   }, 
   {
+    "description": "bq-datetime", 
+    "mode": "NULLABLE", 
+    "name": "created", 
+    "type": "TIMESTAMP"
+  }, 
+  {
     "mode": "NULLABLE", 
     "name": "failures", 
     "type": "INTEGER"
@@ -96,6 +101,23 @@
     "mode": "NULLABLE", 
     "name": "tests", 
     "type": "INTEGER"
+  }, 
+  {
+    "fields": [
+      {
+        "mode": "NULLABLE", 
+        "name": "job_name", 
+        "type": "STRING"
+      }, 
+      {
+        "mode": "NULLABLE", 
+        "name": "build_id", 
+        "type": "INTEGER"
+      }
+    ], 
+    "mode": "NULLABLE", 
+    "name": "metadata", 
+    "type": "RECORD"
   }, 
   {
     "mode": "NULLABLE", 
