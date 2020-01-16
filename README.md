@@ -3,7 +3,11 @@ JUnit形式のテストレポートをBigQueryに蓄積するためのGCS + GCF 
 
 最終的にはBigQueryのデータをDataStudioのようなツールで可視化し、CircleCIのinsightやAzure DevOpsのようにテストレポートのデータを可視化する基盤を自前で構築することがゴールです。
 
-TODO: DataStudioレポートの図を貼る
+## DataStudioで可視化したサンプル
+
+![junit_report1.png](./images/junit_report1.png)
+
+![junit_report2.png](./images/junit_report2.png)
 
 # Deploy
 ## Setup
