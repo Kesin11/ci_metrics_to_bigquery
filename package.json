@@ -25,7 +25,7 @@
   "dependencies": {
     "@google-cloud/bigquery": "4.5.0",
     "@google-cloud/storage": "4.2.0",
-    "xml2js": "0.4.23"
+    "junit2json": "0.1.2"
   },
   "devDependencies": {
     "@types/node": "13.1.6",
