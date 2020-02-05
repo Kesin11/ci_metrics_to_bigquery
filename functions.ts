@@ -48,7 +48,7 @@ const createJunitTestSuites = async (file: any): Promise<ExtendedTestSuites> => 
   const testSuites: ExtendedTestSuites = await parse(uploadedXML.toString())
 
   // 独自フィールドの追加
-  testSuites['allSuccess'] = testSuites['failures'] === 0 ? true : false
+  testSuites['allSuccess'] = (testSuites['failures'] === 0 && testSuites['error'] === 0) ? true : false
   // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
   testSuites['created'] = testSuites['testsuite'][0]['timestamp'] || nowISOString()
   testSuites['metadata'] = file.metadata

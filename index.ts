@@ -26,7 +26,7 @@ const main = async () => {
   const output: ExtendedTestSuites = await parse(xml)
 
   // 独自フィールドの追加
-  output['allSuccess'] = output['failures'] === 0 ? true : false
+  output['allSuccess'] = (output['failures'] === 0 && output['error'] === 0) ? true : false
   // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
   output['created'] = output['testsuite'][0]['timestamp'] || nowISOString()
 
