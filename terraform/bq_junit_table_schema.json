@@ -12,7 +12,7 @@
             "fields": [
               {
                 "mode": "NULLABLE", 
-                "name": "body", 
+                "name": "inner", 
                 "type": "STRING"
               }
             ], 
