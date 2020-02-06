@@ -11,11 +11,11 @@ BUILD_ID=1
 JOB_NAME=gcf_junit_xml_to_bq
 BUCKET=${BUCKET_PREFIX}-pipeline-metrics-bq # BUCKET_PREFIX from ENV
 
-rm -f ./junit/*
-for i in `seq 1 ${DUMMY_NUM}`
-do
-  npm run test -- __tests__/gen_dummy_junit
-done
+# rm -f ./junit/*
+# for i in `seq 1 ${DUMMY_NUM}`
+# do
+#   npm run test -- __tests__/gen_dummy_junit
+# done
 
 for name in `ls junit`
 do
@@ -25,5 +25,5 @@ do
   gsutil \
     -h x-goog-meta-build_id:${BUILD_ID} \
     -h x-goog-meta-job_name:${JOB_NAME} \
-    cp junit/${name} gs://${BUCKET}/junit_dummy/
+    cp junit/${name} gs://${BUCKET}/junit/
 done
