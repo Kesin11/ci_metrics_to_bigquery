@@ -22,6 +22,12 @@ resource "google_storage_bucket" "default" {
   location = local.location
 }
 
+resource "google_storage_bucket" "backup" {
+  name = "backup-${var.bucket_prefix}-pipeline-metrics-bq"
+  storage_class = "NEARLINE"
+  location = local.location
+}
+
 # BigQuery
 ## dataset
 resource "google_bigquery_dataset" "default" {
