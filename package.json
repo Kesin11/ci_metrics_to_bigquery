@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "deploy": "npm run build && gcloud functions deploy loadJunitToBq --runtime nodejs10 --trigger-resource ${GCS_BUCKET} --trigger-event google.storage.object.finalize"
+    "deploy": "npm run build && gcloud functions deploy dispatch --runtime nodejs10 --trigger-resource ${GCS_BUCKET} --trigger-event google.storage.object.finalize --set-env-vars BACKUP_BUCKET=${BACKUP_BUCKET},TZ=Asia/Tokyo"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   "dependencies": {
     "@google-cloud/bigquery": "4.5.0",
     "@google-cloud/storage": "4.2.0",
+    "dayjs": "1.8.20",
     "junit2json": "0.1.2"
   },
   "devDependencies": {
