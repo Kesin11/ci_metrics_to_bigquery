@@ -26,7 +26,7 @@
     "@google-cloud/bigquery": "4.5.0",
     "@google-cloud/storage": "4.2.0",
     "dayjs": "1.8.20",
-    "junit2json": "0.1.2"
+    "junit2json": "0.1.3"
   },
   "devDependencies": {
     "@types/node": "13.1.6",

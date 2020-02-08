@@ -37,6 +37,12 @@ const replacer = (key: any, value: any) => {
   return value
 }
 
+const isAllSuccess = (testSuites: TestSuites): boolean => {
+  const failures = testSuites['failures'] || 0
+  const errors = testSuites['errors'] || 0
+  return (failures === 0 && errors === 0) ? true : false
+}
+
 // XMLをJSON(+独自フィールド追加）に変換
 const createJunitTestSuites = async (file: any): Promise<ExtendedTestSuites> => {
   const storage = new Storage()
@@ -47,7 +53,7 @@ const createJunitTestSuites = async (file: any): Promise<ExtendedTestSuites> => 
   const testSuites: ExtendedTestSuites = await parse(uploadedXML.toString())
 
   // 独自フィールドの追加
-  testSuites['allSuccess'] = (testSuites['failures'] === 0 && testSuites['error'] === 0) ? true : false
+  testSuites['allSuccess'] = isAllSuccess(testSuites)
   // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
   testSuites['created'] = testSuites['testsuite'][0]['timestamp'] || dayjs().format()
   testSuites['metadata'] = file.metadata

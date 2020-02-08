@@ -18,6 +18,12 @@ const replacer = (key: any, value: any) => {
   return value
 }
 
+const isAllSuccess = (testSuites: TestSuites): boolean => {
+  const failures = testSuites['failures'] || 0
+  const errors = testSuites['errors'] || 0
+  return (failures === 0 && errors === 0) ? true : false
+}
+
 const main = async () => {
   const file = process.argv[2]
   // const file = "example/test-output_failure.xml"
@@ -26,7 +32,7 @@ const main = async () => {
   const output: ExtendedTestSuites = await parse(xml)
 
   // 独自フィールドの追加
-  output['allSuccess'] = (output['failures'] === 0 && output['error'] === 0) ? true : false
+  output['allSuccess'] = isAllSuccess(output)
   // もしtestsuite.0.timestampから取得できなければ、GCF上で起動したときの時間
   output['created'] = output['testsuite'][0]['timestamp'] || nowISOString()
 
