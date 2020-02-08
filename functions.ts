@@ -13,7 +13,7 @@ exports.dispatch = async (data: any, context: any) => {
   console.log(`  metadata: ${JSON.stringify(file.metadata)}`);
 
   // 実際に実行するfunctionsを条件によって選択
-  if (path.dirname(file.name).startsWith('junit') && file.contentType !== 'application/xml') {
+  if (path.dirname(file.name).startsWith('junit') && file.contentType === 'application/xml') {
     console.log("dispatch: loadJunitToBq")
     return await loadJunitToBq(file)
   } else{
