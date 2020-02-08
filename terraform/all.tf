@@ -8,6 +8,7 @@ variable "bucket_prefix" {
 
 locals {
   location = "US" # 米国マルチリージョンが最安値
+  product = "pipelien-metrics-bq" # 各リソースにラベルを付与するため
 }
 
 provider "google" {
@@ -20,12 +21,18 @@ resource "google_storage_bucket" "default" {
   name = "${var.bucket_prefix}-pipeline-metrics-bq"
   storage_class = "NEARLINE"
   location = local.location
+  labels = {
+    product: local.product
+  }
 }
 
 resource "google_storage_bucket" "backup" {
   name = "backup-${var.bucket_prefix}-pipeline-metrics-bq"
   storage_class = "NEARLINE"
   location = local.location
+  labels = {
+    product: local.product
+  }
 }
 
 # BigQuery
@@ -33,6 +40,9 @@ resource "google_storage_bucket" "backup" {
 resource "google_bigquery_dataset" "default" {
   dataset_id = "pipeline"
   location = local.location
+  labels = {
+    product: local.product
+  }
 }
 
 # JUnitデータ用
