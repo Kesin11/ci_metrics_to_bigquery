@@ -28,4 +28,13 @@ describe('dummy1', () => {
       expect(r).toBeGreaterThan(30)
     })
   })
+
+  describe('Randomly throw error tests', () => {
+    it('should be wait 0-1sec and error 30%', async () => {
+      await new Promise((resolve) => setTimeout(resolve, randRange(0, 1000)))
+      const r = Math.random() * 100
+      if (r < 30) throw 'assert r < 30'
+      expect(r).toBeGreaterThan(30)
+    })
+  })
 })
