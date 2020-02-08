@@ -38,6 +38,7 @@ GCSトリガーで起動するGCFを `gcloud` コマンドからデプロイし�
 
 ```bash
 export GCS_BUCKET="${BUCKET_PREFIX}-pipeline-metrics-bq"
+export BACKUP_BUCKET="backup-${GCS_BUCKET}"
 npm run deploy
 ```
 
