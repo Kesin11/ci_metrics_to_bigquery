@@ -77,7 +77,16 @@ type StageFlowNode = {
 const removeKeys = ['_links', 'log', 'console']
 
 export const parse = (obj: {[key: string]: any}): Job => {
-  return _parse(obj) as Job
+  const result = _parse(obj) as {[key: string]: any}
+
+  const jobName = obj['_links']['self']['href'].split('/')[2]
+  const buildId = result['id']
+  const status = result['status']
+  result['isSuccess'] = (status === 'SUCCESS') ? true : false
+  result['jobName'] = jobName
+  result['buildTag'] = `jenkins-${jobName}-${buildId}`
+
+  return result as Job
 }
 
 type ObjOrArray = {[key: string]: any } | Array<ObjOrArray>
