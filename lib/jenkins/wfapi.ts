@@ -16,12 +16,14 @@
 // 
 // 値を直したキーを追加するもの
 // *Millis: /1000してsecに直す。名前から単にMillsを消すだけでいい
-// *TimeMillis: /1000してDateTimeにする。タイムゾーンは多分UTCになってる
+// *TimeMillis: /1000してDateTimeのISO文字列にする
 //
 // 消すもの
 // _links, log, console
 
 // 最終的にbuildごとに1行のrowJSONに変換してBigQueryに食わせる
+
+import dayjs from 'dayjs'
 
 type Job = {
   id: string
@@ -38,9 +40,9 @@ type Job = {
   pauseDurationMillis: number
   pauseDuration: number
   stages: Stage[]
-  isSuccess: boolean
-  jobName: string
-  buildTag: string
+  isSuccess: boolean // statusがSUCCESSならtrue
+  jobName: string // ジョブ名。_linkの中身から取得
+  buildTag: string // jenkins-${jobName}-${id}。Jenkinsで実行されるノードにBUILD_TAGのENVで入るもの
 }
 
 type Stage = {
@@ -72,6 +74,49 @@ type StageFlowNode = {
   parentNodes: string[]
 }
 
-export const parse = (obj: {[key: string]: any}): Job => {
+const removeKeys = ['_links', 'log', 'console']
 
+export const parse = (obj: {[key: string]: any}): Job => {
+  return _parse(obj) as Job
+}
+
+type ObjOrArray = {[key: string]: any } | Array<ObjOrArray>
+const _parse = (objOrArray: ObjOrArray): ObjOrArray => {
+  if (Array.isArray(objOrArray)) {
+    return objOrArray.map((_obj: ObjOrArray) => {
+      // 中身がさらにネストされた配列 or objectなら再起
+      if (Array.isArray(_obj) || typeof(_obj) === 'object') {
+        return _parse(_obj)
+      }
+      // それ以外の場合はプリミティブな値なのでreturn
+      return _obj
+    })
+  }
+  let output: {[key: string]: any} = {}
+  Object.keys(objOrArray).forEach((key) => {
+    const nested = objOrArray[key]
+    // 除外キー
+    if (removeKeys.includes(key)) {
+      return
+    }
+    else if (typeof(nested) === 'object') {
+      output[key] = _parse(nested)
+    }
+    // startTimeMillis, endTimeMillisはDateのISO形式を追加
+    else if (key === 'startTimeMillis' || key === 'endTimeMillis') {
+      output[key] = nested
+      const dateKey = key.replace(/Millis/, '')
+      output[dateKey] = dayjs(nested).toISOString()
+    }
+    // *MillisはMillisを消したキーに秒に直した値を追加
+    else if (key.match(/Millis/)) {
+      output[key] = nested
+      const secKey = key.replace(/Millis/, '')
+      output[secKey] = nested / 1000
+    }
+    else {
+      output[key] = nested
+    }
+  })
+  return output
 }
