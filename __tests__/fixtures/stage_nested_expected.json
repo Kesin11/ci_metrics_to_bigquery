@@ -1,0 +1,184 @@
+{
+  "id": "28",
+  "name": "#28",
+  "status": "SUCCESS",
+  "startTime": "2020-02-08T11:19:22Z",
+  "endTime": "2020-02-08T11:24:43Z",
+  "startTimeMillis": 1581160762770,
+  "endTimeMillis": 1581161083628,
+  "durationMillis": 320858,
+  "duration": 320.858,
+  "queueDurationMillis": 2,
+  "queueDuration": 0.002,
+  "pauseDurationMillis": 0,
+  "pauseDuration": 0,
+  "stages": [
+    {
+      "id": "6",
+      "name": "Show env",
+      "execNode": "",
+      "status": "SUCCESS",
+      "startTime": "2020-02-08T11:24:34Z",
+      "startTimeMillis": 1581161074050,
+      "durationMillis": 302,
+      "duration": 0.302,
+      "pauseDurationMillis": 0,
+      "pauseDuration": 0,
+      "stageFlowNodes": [
+        {
+          "id": "7",
+          "name": "Shell Script",
+          "execNode": "",
+          "status": "SUCCESS",
+          "parameterDescription": "env",
+          "startTime": "2020-02-08T11:24:34Z",
+          "startTimeMillis": 1581161074075,
+          "durationMillis": 266,
+          "duration": 0.266,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "6"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "name": "Setup",
+      "execNode": "",
+      "status": "SUCCESS",
+      "startTime": "2020-02-08T11:24:34Z",
+      "startTimeMillis": 1581161074361,
+      "durationMillis": 3056,
+      "duration": 3.056,
+      "pauseDurationMillis": 0,
+      "pauseDuration": 0,
+      "stageFlowNodes": [
+        {
+          "id": "14",
+          "name": "Sleep",
+          "execNode": "",
+          "status": "SUCCESS",
+          "parameterDescription": "3.73807278690767",
+          "startTime": "2020-02-08T11:24:34Z",
+          "startTimeMillis": 1581161074388,
+          "durationMillis": 3007,
+          "duration": 3.007,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "13"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "name": "build",
+      "execNode": "",
+      "status": "SUCCESS",
+      "startTime": "2020-02-08T11:24:37Z",
+      "startTimeMillis": 1581161077424,
+      "durationMillis": 4065,
+      "duration": 4.065,
+      "pauseDurationMillis": 0,
+      "pauseDuration": 0,
+      "stageFlowNodes": [
+        {
+          "id": "23",
+          "name": "Print Message",
+          "execNode": "",
+          "status": "SUCCESS",
+          "parameterDescription": "Random t = 0.5388634603140408",
+          "startTime": "2020-02-08T11:24:37Z",
+          "startTimeMillis": 1581161077449,
+          "durationMillis": 5,
+          "duration": 0.005,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "22"
+          ]
+        },
+        {
+          "id": "24",
+          "name": "Print Message",
+          "execNode": "",
+          "status": "SUCCESS",
+          "startTime": "2020-02-08T11:24:37Z",
+          "startTimeMillis": 1581161077454,
+          "durationMillis": 3,
+          "duration": 0.003,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "23"
+          ]
+        },
+        {
+          "id": "25",
+          "name": "Sleep",
+          "execNode": "",
+          "status": "SUCCESS",
+          "parameterDescription": "4.53886346031404",
+          "startTime": "2020-02-08T11:24:37Z",
+          "startTimeMillis": 1581161077457,
+          "durationMillis": 4008,
+          "duration": 4.008,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "24"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "31",
+      "name": "Declarative: Post Actions",
+      "execNode": "",
+      "status": "SUCCESS",
+      "startTime": "2020-02-08T11:24:41Z",
+      "startTimeMillis": 1581161081498,
+      "durationMillis": 2034,
+      "duration": 2.034,
+      "pauseDurationMillis": 0,
+      "pauseDuration": 0,
+      "stageFlowNodes": [
+        {
+          "id": "32",
+          "name": "Print Message",
+          "execNode": "",
+          "status": "SUCCESS",
+          "parameterDescription": "success",
+          "startTime": "2020-02-08T11:24:41Z",
+          "startTimeMillis": 1581161081510,
+          "durationMillis": 4,
+          "duration": 0.004,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "31"
+          ]
+        },
+        {
+          "id": "33",
+          "name": "Sleep",
+          "execNode": "",
+          "status": "SUCCESS",
+          "parameterDescription": "2",
+          "startTime": "2020-02-08T11:24:41Z",
+          "startTimeMillis": 1581161081514,
+          "durationMillis": 2009,
+          "duration": 2.009,
+          "pauseDurationMillis": 0,
+          "pauseDuration": 0,
+          "parentNodes": [
+            "32"
+          ]
+        }
+      ]
+    }
+  ]
+}
