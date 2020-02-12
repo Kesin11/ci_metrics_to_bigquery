@@ -13,19 +13,22 @@
 // jobName: string // rootの_linkの中身を見ればパース可能
 // buildTag: string // jenkins-${jobName}-${id}でENVに自動的に入ってるやつ。jobNameが分かれば自作可能
 //  これは後でBigQuery側で重複レコードを省いて集計するときに使う
+// nodeSumDurationMillis: number // rootのdurationは分割されたstagesがキュー待ちしている時間を含んでいるため、stageFlowNodesのdurationを合計する
+//   ちなみに、queueDurationは正確ではないように見えるのでアテにしてない
+// nodeSumDuration: number // nodeSumDurationMillisをsecに直したもの
 // 
 // 値を直したキーを追加するもの
 // *Millis: /1000してsecに直す。名前から単にMillsを消すだけでいい
 // *TimeMillis: /1000してDateTimeのISO文字列にする
 //
 // 消すもの
-// _links, log, console
+// _links, log, console, error
 
 // 最終的にbuildごとに1行のrowJSONに変換してBigQueryに食わせる
 
 import dayjs from 'dayjs'
 
-type Job = {
+export type Job = {
   id: string
   name: string
   status: string
@@ -39,13 +42,15 @@ type Job = {
   queueDuration: number
   pauseDurationMillis: number
   pauseDuration: number
+  nodeSumDurationMillis: number
+  nodeSumDuration: number
   stages: Stage[]
   isSuccess: boolean // statusがSUCCESSならtrue
   jobName: string // ジョブ名。_linkの中身から取得
   buildTag: string // jenkins-${jobName}-${id}。Jenkinsで実行されるノードにBUILD_TAGのENVで入るもの
 }
 
-type Stage = {
+export type Stage = {
   id: string
   name: string
   execNode: string
@@ -59,7 +64,7 @@ type Stage = {
   stageFlowNodes: StageFlowNode[]
 }
 
-type StageFlowNode = {
+export type StageFlowNode = {
   id: string
   name: string
   execNode: string
@@ -74,7 +79,7 @@ type StageFlowNode = {
   parentNodes: string[]
 }
 
-const removeKeys = ['_links', 'log', 'console']
+const removeKeys = ['_links', 'log', 'console', 'error']
 
 export const parse = (obj: {[key: string]: any}): Job => {
   const result = _parse(obj) as {[key: string]: any}
@@ -85,6 +90,10 @@ export const parse = (obj: {[key: string]: any}): Job => {
   result['isSuccess'] = (status === 'SUCCESS') ? true : false
   result['jobName'] = jobName
   result['buildTag'] = `jenkins-${jobName}-${buildId}`
+
+  const nodeSumDurationMillis = createNodeSumDurationMillis(result as Job)
+  result['nodeSumDurationMillis'] = nodeSumDurationMillis
+  result['nodeSumDuration'] = nodeSumDurationMillis / 1000
 
   return result as Job
 }
@@ -128,4 +137,16 @@ const _parse = (objOrArray: ObjOrArray): ObjOrArray => {
     }
   })
   return output
+}
+
+const createNodeSumDurationMillis = (job: Job): number => {
+  const stages = job['stages']
+  let nodeSumDurationMillis = 0
+  stages.forEach((stage) => {
+    stage.stageFlowNodes.forEach((step) => {
+      nodeSumDurationMillis += step.durationMillis
+    })
+  })
+
+  return nodeSumDurationMillis
 }
