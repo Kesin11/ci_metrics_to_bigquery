@@ -72,12 +72,12 @@ resource "google_bigquery_table" "junit" {
 resource "google_bigquery_table" "raw_job" {
   dataset_id = google_bigquery_dataset.default.dataset_id
   table_id   = "job"
-  schema = file("./common_partition_by_created.json")
+  schema = file("./job_schema.json")
   description = "Jobの生データ蓄積用のTable。参照は取り回しやすいようにViewの方を使うこと"
 
   time_partitioning {
     type = "DAY"
-    field = "created"
+    field = "startTime"
   }
 }
 

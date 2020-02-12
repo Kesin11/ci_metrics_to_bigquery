@@ -1,0 +1,220 @@
+[
+  {
+    "mode": "NULLABLE",
+    "name": "jobName",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "isSuccess",
+    "type": "BOOLEAN"
+  },
+  {
+    "fields": [
+      {
+        "fields": [
+          {
+            "mode": "REPEATED",
+            "name": "parentNodes",
+            "type": "INTEGER"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "duration",
+            "type": "FLOAT"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "durationMillis",
+            "type": "INTEGER"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "execNode",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "pauseDurationMillis",
+            "type": "INTEGER"
+          },
+          {
+            "description": "bq-datetime",
+            "mode": "NULLABLE",
+            "name": "startTime",
+            "type": "TIMESTAMP"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "startTimeMillis",
+            "type": "INTEGER"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "parameterDescription",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "status",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "pauseDuration",
+            "type": "INTEGER"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "name",
+            "type": "STRING"
+          },
+          {
+            "mode": "NULLABLE",
+            "name": "id",
+            "type": "INTEGER"
+          }
+        ],
+        "mode": "REPEATED",
+        "name": "stageFlowNodes",
+        "type": "RECORD"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "duration",
+        "type": "FLOAT"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "durationMillis",
+        "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "pauseDurationMillis",
+        "type": "INTEGER"
+      },
+      {
+        "description": "bq-datetime",
+        "mode": "NULLABLE",
+        "name": "startTime",
+        "type": "TIMESTAMP"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "status",
+        "type": "STRING"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "execNode",
+        "type": "STRING"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "pauseDuration",
+        "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "name",
+        "type": "STRING"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "startTimeMillis",
+        "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "id",
+        "type": "INTEGER"
+      }
+    ],
+    "mode": "REPEATED",
+    "name": "stages",
+    "type": "RECORD"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "pauseDuration",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "pauseDurationMillis",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nodeSumDuration",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "queueDurationMillis",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "buildTag",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "duration",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "nodeSumDurationMillis",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "queueDuration",
+    "type": "FLOAT"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "durationMillis",
+    "type": "INTEGER"
+  },
+  {
+    "description": "bq-datetime",
+    "mode": "NULLABLE",
+    "name": "endTime",
+    "type": "TIMESTAMP"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "status",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "name",
+    "type": "STRING"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "endTimeMillis",
+    "type": "INTEGER"
+  },
+  {
+    "description": "bq-datetime",
+    "mode": "NULLABLE",
+    "name": "startTime",
+    "type": "TIMESTAMP"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "startTimeMillis",
+    "type": "INTEGER"
+  },
+  {
+    "mode": "NULLABLE",
+    "name": "id",
+    "type": "INTEGER"
+  }
+]
