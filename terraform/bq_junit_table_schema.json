@@ -9,18 +9,6 @@
       {
         "fields": [
           {
-            "fields": [
-              {
-                "mode": "NULLABLE", 
-                "name": "inner", 
-                "type": "STRING"
-              }
-            ], 
-            "mode": "REPEATED", 
-            "name": "failure", 
-            "type": "RECORD"
-          }, 
-          {
             "mode": "NULLABLE", 
             "name": "time", 
             "type": "FLOAT"
@@ -34,6 +22,18 @@
             "mode": "NULLABLE", 
             "name": "classname", 
             "type": "STRING"
+          },
+          {
+            "fields": [
+              {
+                "mode": "NULLABLE",
+                "name": "inner",
+                "type": "STRING"
+              }
+            ],
+            "mode": "REPEATED",
+            "name": "failure",
+            "type": "RECORD"
           }
         ], 
         "mode": "REPEATED", 
