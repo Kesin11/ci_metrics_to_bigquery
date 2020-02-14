@@ -62,6 +62,8 @@ export type Stage = {
   pauseDurationMillis: number
   pauseDuration: number
   stageFlowNodes: StageFlowNode[]
+  nodeSumDurationMillis: number
+  nodeSumDuration: number
 }
 
 export type StageFlowNode = {
@@ -79,10 +81,12 @@ export type StageFlowNode = {
   parentNodes: string[]
 }
 
+type anyValueObject = {[key: string]: any}
+
 const removeKeys = ['_links', 'log', 'console', 'error']
 
-export const parse = (obj: {[key: string]: any}): Job => {
-  const result = _parse(obj) as {[key: string]: any}
+export const parse = (obj: anyValueObject): Job => {
+  const result = _parse(obj) as anyValueObject
 
   const jobName = obj['_links']['self']['href'].split('/')[2]
   const buildId = result['id']
@@ -91,14 +95,13 @@ export const parse = (obj: {[key: string]: any}): Job => {
   result['jobName'] = jobName
   result['buildTag'] = `jenkins-${jobName}-${buildId}`
 
-  const nodeSumDurationMillis = createNodeSumDurationMillis(result as Job)
-  result['nodeSumDurationMillis'] = nodeSumDurationMillis
-  result['nodeSumDuration'] = nodeSumDurationMillis / 1000
+  // resultにnodeSumDuration, stages.nodeSumDurationを追加
+  addNodeSumDuration(result)
 
   return result as Job
 }
 
-type ObjOrArray = {[key: string]: any } | Array<ObjOrArray>
+type ObjOrArray = anyValueObject | Array<anyValueObject>
 const _parse = (objOrArray: ObjOrArray): ObjOrArray => {
   if (Array.isArray(objOrArray)) {
     return objOrArray.map((_obj: ObjOrArray) => {
@@ -139,14 +142,26 @@ const _parse = (objOrArray: ObjOrArray): ObjOrArray => {
   return output
 }
 
-const createNodeSumDurationMillis = (job: Job): number => {
-  const stages = job['stages']
-  let nodeSumDurationMillis = 0
-  stages.forEach((stage) => {
-    stage.stageFlowNodes.forEach((step) => {
-      nodeSumDurationMillis += step.durationMillis
-    })
+// 引数で受け取ったJobにnodeSumDurationの情報を加える
+const addNodeSumDuration = (job: anyValueObject): void => {
+  // stageごとの集計
+  job['stages'].forEach((stage: anyValueObject) => {
+    const stageNodeSumDurationMillis = stage.stageFlowNodes
+      .map((step: anyValueObject) => step.durationMillis)
+      // 初期値0のsumを計算
+      .reduce((accumulator: number, current: number) => {
+        return accumulator + current
+      }, 0)
+    stage['nodeSumDurationMillis'] = stageNodeSumDurationMillis
+    stage['nodeSumDuration'] = stageNodeSumDurationMillis / 1000
   })
 
-  return nodeSumDurationMillis
+  // 全stageの集計
+  const nodeSumDurationMillis = job['stages']
+    .map((stage: anyValueObject) => stage['nodeSumDurationMillis'])
+    .reduce((accumulator: number, current: number) => {
+      return accumulator + current
+    }, 0)
+  job['nodeSumDurationMillis'] = nodeSumDurationMillis
+  job['nodeSumDuration'] = nodeSumDurationMillis / 1000
 }
