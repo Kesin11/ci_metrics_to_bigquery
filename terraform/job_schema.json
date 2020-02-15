@@ -12,6 +12,16 @@
   {
     "fields": [
       {
+        "mode": "NULLABLE",
+        "name": "nodeSumDuration",
+        "type": "FLOAT"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "pauseDuration",
+        "type": "INTEGER"
+      },
+      {
         "fields": [
           {
             "mode": "REPEATED",
@@ -86,8 +96,18 @@
       },
       {
         "mode": "NULLABLE",
+        "name": "nodeSumDurationMillis",
+        "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
         "name": "durationMillis",
         "type": "INTEGER"
+      },
+      {
+        "mode": "NULLABLE",
+        "name": "execNode",
+        "type": "STRING"
       },
       {
         "mode": "NULLABLE",
@@ -104,16 +124,6 @@
         "mode": "NULLABLE",
         "name": "status",
         "type": "STRING"
-      },
-      {
-        "mode": "NULLABLE",
-        "name": "execNode",
-        "type": "STRING"
-      },
-      {
-        "mode": "NULLABLE",
-        "name": "pauseDuration",
-        "type": "INTEGER"
       },
       {
         "mode": "NULLABLE",
