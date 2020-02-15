@@ -84,9 +84,23 @@ resource "google_bigquery_table" "raw_job" {
 resource "google_bigquery_table" "job" {
   dataset_id = google_bigquery_dataset.default.dataset_id
   table_id   = "job_view"
-  description = "参照用のView"
+  description = "参照用のView。重複行を除去済み"
   view {
-    query = "SELECT * FROM `${var.project_id}.${google_bigquery_dataset.default.dataset_id}.${google_bigquery_table.raw_job.table_id}`"
+    query = <<-EOT
+    WITH
+      t AS (
+      SELECT
+        *,
+        ROW_NUMBER() OVER (PARTITION BY buildTag) AS row_number
+      FROM
+        `${var.project_id}.${google_bigquery_dataset.default.dataset_id}.${google_bigquery_table.raw_job.table_id}`)
+    SELECT
+      * EXCEPT(row_number)
+    FROM
+      t
+    WHERE
+      row_number = 1
+    EOT
     use_legacy_sql = false
   }
 }
