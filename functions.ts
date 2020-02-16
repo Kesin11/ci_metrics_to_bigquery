@@ -1,5 +1,6 @@
 import path from 'path'
 import { loadJunitToBq } from './lib/functions/load_junit'
+import { loadJobToBq } from './lib/functions/load_job';
 
 // このようにアップロードする
 // gsutil -h x-goog-meta-build_id:11 -h x-goog-meta-job_name:gcf_junit_xml_to_bq cp example/functions.xml gs://kesin11-pipeline-metrics-bq/junit/
@@ -16,6 +17,10 @@ exports.dispatch = async (data: any, context: any) => {
   if (path.dirname(file.name).startsWith('junit') && file.contentType === 'application/xml') {
     console.log("dispatch: loadJunitToBq")
     return await loadJunitToBq(file)
+  }
+  else if (path.dirname(file.name).startsWith('job') && file.contentType === 'application/json') {
+    console.log("dispatch: loadJobToBq")
+    return await loadJobToBq(file)
   } else{
     // XML以外のファイル、GCSへのディレクトリ作成の場合は何もしないで終了
     console.warn("Any functions have not been dispatched.")
