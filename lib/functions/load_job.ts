@@ -43,7 +43,6 @@ const loadJobJson = async (fileName: string, rowJson: string): Promise<string> =
     .dataset('pipeline')
     // GCS上のパスからload先のtableを選択
     .table(filePathToTable(fileName))
-    // TODO: GCSから直接アップロード
     .load(tempJsonPath, {
       autodetect: true,
       schemaUpdateOptions: ['ALLOW_FIELD_ADDITION'],
@@ -69,9 +68,8 @@ export const loadJobToBq = async (file: any) => {
   }
 
   const jobs = await createJobs(file)
-  console.log(`  jobs: ${JSON.stringify(jobs, null, 2)}`)
 
-  const rowJson = jobs.map((row) => JSON.stringify(row)).join()
+  const rowJson = jobs.map((row) => JSON.stringify(row)).join("\n")
   const tempJsonPath = await loadJobJson(file.name, rowJson)
 
   // BigQueryにloadしたjsonを別のバケットにバックアップとして保存する

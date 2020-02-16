@@ -15,6 +15,7 @@ const main = async () => {
   // console.log(JSON.stringify(parsedJson, null, 2))
 
   // BigQueryにloadするために1行区切りJSON（Newline Delimited JSON）で出力する場合
-  parsedJson.forEach((row) => console.log(JSON.stringify(row)))
+  const rowBasedJson = parsedJson.map((row) => JSON.stringify(row)).join("\n")
+  console.log(rowBasedJson)
 }
 main()
