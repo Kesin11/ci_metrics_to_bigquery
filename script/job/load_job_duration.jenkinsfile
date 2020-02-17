@@ -1,0 +1,22 @@
+// TODO: おそらくgcloudの認証など必要なステップがいくつか足りなさそう
+pipeline {
+   agent any
+   env {
+     // Input your env
+     JENKINS_USER = "JENKINS_USER"
+     JENKINS_TOKEN = "JENKINS_TOKEN"
+     JENKINS_HOME = "JENKINS_HOME"
+     GCS_BUCKET = "GCS_BUCKET"
+   }
+   stages {
+        stage('Setup repository') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Load job duration') {
+            steps {
+                sh script/job/curl_wfapi.sh
+            }
+        }
+}
