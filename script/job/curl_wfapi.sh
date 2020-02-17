@@ -16,11 +16,12 @@ JQ="jq -r '.jobs[] | select(._class == \"org.jenkinsci.plugins.workflow.job.Work
 # NOTE: ジョブ名でフィルタリングしたい場合は、jqの後にパイプでgrepを追加する
 COMMAND="${CURL} | ${JQ}"
 
+cd `dirname $0`
 
-mkdir -p ${OUTPUT_DIR}
+mkdir -p ../../${OUTPUT_DIR}
 for job_name in `eval ${COMMAND}`; do
   wfapi_url="${JENKINS_HOME}/job/${job_name}/wfapi/runs?fullStages=true"
-  output_json="${OUTPUT_DIR}/wfapi_${job_name}_${DATE}.json"
+  output_json="../../${OUTPUT_DIR}/wfapi_${job_name}_${DATE}.json"
 
   curl -u "${USER}:${TOKEN}" -s ${wfapi_url} > ${output_json}
   gsutil cp ${output_json} gs://${GCS_BUCKET}/job/

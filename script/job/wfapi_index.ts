@@ -1,10 +1,10 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { parse, Job } from '../lib/jenkins/wfapi'
+import { parse, Job } from '../../lib/jenkins/wfapi'
 
 const main = async () => {
   const file = process.argv[2]
-  // const file = "job_example/build-pipeline-nested.json"
+  // const file = "example/job/build-pipeline-nested.json"
 
   const json = JSON.parse(fs.readFileSync(path.resolve(file)).toString())
   const parsedJson: Job[] = json.map((build: {[key: string]: any}) => {

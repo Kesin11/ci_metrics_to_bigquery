@@ -116,3 +116,4 @@ crash.log
 
 out/
 junit/
+!example/junit
