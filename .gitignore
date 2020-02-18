@@ -115,5 +115,4 @@ dist
 crash.log
 
 out/
-junit/
-!example/junit
+/junit/
