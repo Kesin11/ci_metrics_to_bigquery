@@ -8,7 +8,7 @@ variable "bucket_prefix" {
 
 locals {
   location = "US" # 米国マルチリージョンが最安値
-  product = "pipelien-metrics-bq" # 各リソースにラベルを付与するため
+  product = "pipeline-metrics-bq" # 各リソースにラベルを付与するため
 }
 
 provider "google" {
