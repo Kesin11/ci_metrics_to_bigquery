@@ -88,7 +88,7 @@ const removeKeys = ['_links', 'log', 'console', 'error']
 export const parse = (obj: anyValueObject): Job => {
   const result = _parse(obj) as anyValueObject
 
-  const jobName = obj['_links']['self']['href'].split('/')[2]
+  const jobName = obj['_links']['self']['href'].match(/job\/(.+?)\//)[1]
   const buildId = result['id']
   const status = result['status']
   result['isSuccess'] = (status === 'SUCCESS') ? true : false
